@@ -9,6 +9,7 @@ on:
     - 'docs/**'
     branches: 
     - main
+    - test
 
 jobs:
   unit:
