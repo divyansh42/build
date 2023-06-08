@@ -225,11 +225,11 @@ test-e2e-kind-with-prereq-install: ginkgo install-controller-kind install-strate
 .PHONY: install
 install:
 	@echo "Building Shipwright Build controller for platform ${GO_OS}/${GO_ARCH}"
-	GOOS=$(GO_OS) GOARCH=$(GO_ARCH) KO_DOCKER_REPO="$(IMAGE_HOST)/$(IMAGE_NAMESPACE)" GOFLAGS="$(GO_FLAGS)" ko apply --base-import-paths -R -f deploy/
+	GOOS=$(GO_OS) GOARCH=$(GO_ARCH) KO_DOCKER_REPO="$(IMAGE_HOST)/$(IMAGE_NAMESPACE)" GOFLAGS="$(GO_FLAGS)" ko resolve --base-import-paths -R -f deploy/ | oc create -f -
 
 .PHONY: install-with-pprof
 install-with-pprof:
-	GOOS=$(GO_OS) GOARCH=$(GO_ARCH) GOFLAGS="$(GO_FLAGS) -tags=pprof_enabled" ko apply -R -f deploy/
+	GOOS=$(GO_OS) GOARCH=$(GO_ARCH) GOFLAGS="$(GO_FLAGS) -tags=pprof_enabled" ko resolve -R -f deploy/ | oc create -f -
 
 install-apis:
 	kubectl apply -f deploy/crds/ --server-side
@@ -242,7 +242,8 @@ install-apis:
 .PHONY: install-controller
 install-controller: install-apis
 	@echo "Building Shipwright Build controller for platform ${GO_OS}/${GO_ARCH}"
-	GOOS=$(GO_OS) GOARCH=$(GO_ARCH) KO_DOCKER_REPO="$(IMAGE_HOST)/$(IMAGE_NAMESPACE)" GOFLAGS="$(GO_FLAGS)" ko apply --base-import-paths -f deploy/
+	GOOS=$(GO_OS) GOARCH=$(GO_ARCH) KO_DOCKER_REPO="$(IMAGE_HOST)/$(IMAGE_NAMESPACE)" GOFLAGS="$(GO_FLAGS)" ko resolve --base-import-paths -f deploy/ | oc create -f -
+
 
 .PHONY: install-controller-kind
 install-controller-kind: install-apis
